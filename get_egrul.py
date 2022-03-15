@@ -19,7 +19,7 @@ def main():
     button2.click()
     browser.switch_to.default_content()
     browser.find_element_by_xpath('//*[@id="btnSearch"]').click()
-    sleep(2)
+    sleep(10)
     res = get_search_res(browser)
     if not res:
         print('По заданным параметрам в базе ЕГРЮЛ ничего не найдено')
@@ -49,7 +49,7 @@ def make_choice(objs):
         print('{}) {};\n'.format(item.count, item.text)) 
     res = input('Введите номер интересующей Вас организации: ')
     objs[int(res)-1].button.click()
-    sleep(2)
+    sleep(10)
     print('Выписка или выписки из ЕГРЮЛ скачаны.')
     if not res.isdigit() or int(res) > len(objs):
         print('Уточните параметры ввода')
