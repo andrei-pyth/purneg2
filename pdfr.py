@@ -2,6 +2,7 @@ import os
 import fitz
 import re
 import get_egrul
+import file_orgzer
 from time import sleep
 
 
@@ -19,6 +20,16 @@ class EgrulData:
         self.reg_date = re.search(r'Дата регистрации\n(.*)', self.text).group(1)
         self.chefs = Chefs(self.text)
         self.capital = Capital(self.text)
+        self.inn = self.get_inn(self.text)
+        self.kpp = self.get_kpp(self.text)
+
+    def get_kpp(text):
+        res = re.search(r'КПП юридического лица\n(.*)', text).group(1)
+        return res
+
+    def get_inn(text):
+        res = re.search(r'ИНН юридического лица\n(.*)', text).group(1)
+        return res
 
     def grn_reg_date(self, text):
         res = re.search(r'ГРН и дата внесения в ЕГРЮЛ записи,\nсодержащей указанные сведения\n(.*)\n(.*)', text)
@@ -92,7 +103,10 @@ class Capital(EgrulData):
     def __init__(self, text):
         self.text = get_text(r'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде\n', text)
         self.type = re.search(r'Вид\n(.*)', self.text).group(1)
-        self.amount = re.search(r'Размер (в рублях)\n(.*)', self.text). group(1)
+        print(self.type, '====> Данные о виде капитала получены')
+        print(self.text)
+        self.amount = re.search(r'Размер \(в рублях\)\n(.*)', self.text).group(1)
+        print(self.amount)
         self.grn, self.reg_date = EgrulData.grn_reg_date(self, self.text)
 
 def get_text(pattern, text):
@@ -100,17 +114,9 @@ def get_text(pattern, text):
     return text[res.span()[1]:]
 
 
-
 def main():
     get_egrul.main()
-    if not os.path.isdir('pdf_files'):
-        os.mkdir('pdf_files')
-    lst = os.listdir()
-    for item in lst:
-        if '.pdf' in item or '.PDF' in item:
-            os.rename(item, 'pdf_files/egrul.pdf')
-            print('Выписка ЕГРЮЛ переименована и сохранена в общую папку')
-    sleep(2)
+    file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
     res = EgrulData()
     return res
 

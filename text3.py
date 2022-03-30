@@ -1,4 +1,3 @@
-import company_keyb as ck
 import data as cr
 from docx import Document
 from docx.shared import Cm
@@ -64,10 +63,10 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.common_info_text + '\n').alignment = 3
         
         self.document.add_paragraph('Полное наименование компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.company_full_name + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.full_name + '\n')
 
         self.document.add_paragraph('Краткое наименование компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.company_short_name + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.short_name + '\n')
                 
         self.document.add_paragraph('Налоговый режим:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.nalog_regim + '\n')
@@ -152,20 +151,8 @@ def save_doc(doc):
     fl = input('Введите название файла с результатом: ')
     doc.save(fl)
 
-def choose_source():
-    res = input('Выберите источник получения данных о контрагенте:\n1) Клавиатура\n2) База данных kartoteka.ru\n\n')
-    if not res in ['1', '2']:
-        res = input('Выберите первое или второе (нажмите 1 или 2)')
-        if not res in ['1', '2']:
-            print('Вы не справились! Будете вводить с клавиатуры!')
-    else: return res
-
 def main():
-    source = choose_source()
-    if source == '1':
-        comp = ck.Company()
-    elif source == '2':
-        comp = cr.Company()
+    comp = cr.Company()
     doc = DocText(comp)
     save_doc(doc.document)
 
