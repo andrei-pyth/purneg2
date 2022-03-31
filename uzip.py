@@ -1,14 +1,10 @@
 from zipfile import ZipFile
-import os
 
 def main():
-    if not os.path.isdir('xml_files'):
-        os.mkdir('xml_files')
     with ZipFile('zip_files/srn.zip') as zf:
         lst = zf.namelist()
         for count, item in enumerate(lst):
-            zf.open(item)
-
-
-            print(f'Распаковано {count} файлов из базы СРН')
-            
+            with zf.open(item) as file:
+                pg = file.read()
+                pg = pg.decode('utf-8')
+            yield pg
