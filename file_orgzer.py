@@ -4,6 +4,8 @@ from time import sleep
 def check_download(ext_ch):
     while True:
         filenames = os.listdir()
+        print(f'Происходит скачивание архива {filenames}...')
+        sleep(1)
         if len(filenames) > 0 and not any('.crdownload' in name for name in filenames):
             break
     for name in filenames:
