@@ -69,7 +69,7 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.short_name + '\n')
                 
         self.document.add_paragraph('Налоговый режим:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.nalog_regim + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.srn_for_text + '\n')
         
         self.document.add_paragraph('Форма собственности:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.form_sobst + '\n')

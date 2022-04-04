@@ -1,5 +1,6 @@
 import datetime
 import pdfr
+import take_srn
 import company_keyb as ck
 from bs4 import BeautifulSoup
 from found import Founder
@@ -9,29 +10,24 @@ from egrul_ch import EgrulChanges
 class Company():
 
     def __init__(self):
-        self.ogrn = self.dct['ОГРН']
-        self.inn = self.dct['ИНН']
-        self.kpp = self.dct.get('КПП')
+        self.__init__ = pdfr.EgrulData.__init__()
         self.okpo = self.dct['ОКПО']
         self.okopf = self.dct['ОКОПФ']
         self.okfs = self.dct['ОКФС']
         try: self.status = self.dct['Статус']
         except KeyError: self.status = 'Не указан'
-        self.reg_data = self.dct['Дата первичной регистрации']
-        self.company_full_name = self.dct['Полное наименование']
-        self.company_short_name = self.dct['Сокращенное наименование']
-        self.company_adress = self.dct['Адрес']
         try: self.company_staff = self.dct['Среднесписочная численность персонала:']
         except KeyError: self.company_staff = 'Не указана'
         self.common_info_text = input('Введите общую информацию о компании: ')
-        try: self.nalog_regim = self.dct['Налоговый режим']
+        self.srn = self.srn(str(self.inn))
+        self.srn_for_text = self.srn_for_text(self.srn)
         except KeyError: self.nalog_regim = 'Не указан'
         self.form_sobst = self.dct['Форма собственности']
         self.org_pr_form = self.dct['Организационно-правовая форма']
         try: self.telef = self.dct['Телефон']
         except KeyError: self.telef = 'Не указан'
         self.date = datetime.datetime.now().strftime("%d-%m-%Y")
-        self.customer = ck.Company.customer(self)
+        self.customer = input('Введите наименование заказчика: ') 
         try: self.ystav_kap = self.dct['Уставный капитал']
         except KeyError: self.ystav_kap = 'Не указан'
         self.branches_lst = self.find_branches()
@@ -57,6 +53,17 @@ class Company():
         self.activities_list = pdfr.main(self.ogrn)
         print(self.activities_list)
         self.activities_text = self.get_activities_text(self.activities_list)
+
+    def srn_for_text(self, srn):
+        if srn == 'ОСН':
+            return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов у контрагента не содержит)'
+        else: return srn
+
+    def srn(self, inn):
+        res = take_srn.main(inn)
+        if not res:
+            return 'ОСН'
+        else: return res
 
     def get_activities_text(self, lst):
         txt = ''
@@ -221,10 +228,3 @@ class Company():
     def find_data(self):
         return self._table.find_all('tr')
 
-    def make_dct(self):
-        dct = {} 
-        for item in self._data:
-            res = item.find_all('td')
-            dct[res[0].text] = res[1].text
-        print(dct)
-        return dct

@@ -1,3 +1,4 @@
+import wget
 import file_orgzer
 from selenium.webdriver.common.by import By
 from auth import auth
@@ -10,12 +11,12 @@ def get_srn():
     if window:
         lnk = window.get_attribute('href')
         print(f'Ссылка на базу данных найдена!!!  ===>  {lnk}')
-        r = requests.get('https://data.nalog.ru/opendata/7707329152-snr/data-20220117-structure-20180801.zip')
+        r = wget.download('https://data.nalog.ru/opendata/7707329152-snr/data-20220117-structure-20180801.zip')
         #window.click()
     else:
         print('Ссылка на базу данных НЕ найдена!!!')
 
 def main():
     get_srn()
-    #file_orgzer.check_download('.zip')
+    file_orgzer.check_download('.zip')
     file_orgzer.org_files('zip_files', '.zip', 'zip_files/srn.zip', 'СНР') 

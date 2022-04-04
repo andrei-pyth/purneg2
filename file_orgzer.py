@@ -6,10 +6,10 @@ def check_download(ext_ch):
         filenames = os.listdir()
         print(f'Происходит скачивание архива {filenames}...')
         sleep(1)
-        if len(filenames) > 0 and not any('.crdownload' in name for name in filenames):
+        if len(filenames) > 0 and not any('.tmp' in name for name in filenames):
             break
     for name in filenames:
-        if name.endswith('.crdownload'):
+        if name.endswith('.tmp'):
             continue
         if name.endswith(ext_ch) or name.endswith(ext_ch.upper()):
             print('')
