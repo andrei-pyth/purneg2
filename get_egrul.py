@@ -27,7 +27,6 @@ def main():
     else:
         show_rs2_res(res)
         browser.quit()
-        print('Выписка из ЕГРЮЛ скачана!')
         
 def get_search_res(browser):
     title = browser.find_elements_by_xpath('//*[@id="resultContent"]/div/div[2]/a')
@@ -43,6 +42,7 @@ def show_rs2_res(res):
         print('По Вашему запросу ничего не найдено.')
     else:
         make_choice(display_objs)
+        print('Выписка или выписки из ЕГРЮЛ скачаны.')
 
 def make_choice(objs):
     for item in objs:
@@ -50,7 +50,6 @@ def make_choice(objs):
     res = input('Введите номер интересующей Вас организации: ')
     objs[int(res)-1].button.click()
     sleep(10)
-    print('Выписка или выписки из ЕГРЮЛ скачаны.')
     if not res.isdigit() or int(res) > len(objs):
         print('Уточните параметры ввода')
         make_choice(objs)

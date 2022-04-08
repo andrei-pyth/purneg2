@@ -1,7 +1,6 @@
 import re
 import get_egrul
 import file_orgzer
-from file_orgzer import get_text
 
 
 class EgrulData:
@@ -10,8 +9,6 @@ class EgrulData:
         self.okveds = self.get_okved(self.text)
         self.full_name = re.search(r'Настоящая выписка содержит сведения о юридическом лице\n(.*)', self.text).group(1)
         self.ogrn = re.search(r'ОГРН(.*)', self.text).group(1)
-        self.ogrn = self.ogrn.split()
-        self.ogrn = ''.join(self.ogrn)
         self.name_grn = self.grn_reg_date(self.text)[0]
         self.name_reg_date = self.grn_reg_date(self.text)[1]
         self.short_name = re.search(r'Сокращенное наименование на русском\nязыке\n(.*)', self.text).group(1)
@@ -43,7 +40,6 @@ class EgrulData:
             el = item.split('\n')
             res = self.get_sep_okveds(el)
             if res:
-                print(res)
                 lst.append(res)
         return lst
 

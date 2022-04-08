@@ -40,14 +40,14 @@ class DocText():
         self.paragraph.style = self.document.styles['Heading 1']
         self.paragraph.alignment = 1
 
-        self.sentence = self.paragraph.add_run(self.comp.company_full_name + '\n\n\n\n\n')
+        self.sentence = self.paragraph.add_run(self.comp.full_name + '\n\n\n\n\n')
         self.sentence.font.bold = True
         self.sentence.font.size = Pt(20)
 
         self.sentence = self.paragraph.add_run('на предмет соответствия требованиям к контрагентам\n')
         self.sentence.font.bold = False
 
-        self.sentence = self.paragraph.add_run('"' + self.comp.customer + '"\n\n\n\n\n\n')
+        self.sentence = self.paragraph.add_run('"' + self.comp.customer.upper() + '"\n\n\n\n\n\n')
         self.sentence.font.bold = True
 
         self.sentence = self.paragraph.add_run(self.comp.date)
@@ -72,13 +72,13 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.srn_for_text + '\n')
         
         self.document.add_paragraph('Форма собственности:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.form_sobst + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.okfs_text + '\n')
         
         self.document.add_paragraph('Организационно-правовая форма:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.org_pr_form + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.okopf_text + '\n')
 
         self.document.add_paragraph('При регистрации организации присвоены:\n').style = self.document.styles['Heading 1']
-        table = self.document.add_table(rows=6, cols=2)
+        table = self.document.add_table(rows=9, cols=2)
         table.cell(0, 0).text = 'ОГРН'
         table.cell(0, 1).text = self.comp.ogrn
         table.cell(1, 0).text = 'ИНН'
@@ -94,31 +94,37 @@ class DocText():
         table.cell(4, 1).text = self.comp.okfs
         table.cell(5, 0).text = 'ОКОПФ'
         table.cell(5, 1).text = self.comp.okopf
+        table.cell(6, 0).text = 'ОКАТО'
+        table.cell(6, 1).text = self.comp.okato
+        table.cell(7, 0).text = 'ОКТМО'
+        table.cell(7, 1).text = self.comp.oktmo
+        table.cell(8, 0).text = 'ОКОГУ'
+        table.cell(8, 1).text = self.comp.okogy
         
         self.document.add_paragraph('Статус:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.status + '\n')
 
         self.document.add_paragraph('Дата первичной регистрации:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.reg_data + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.reg_date + '\n')
 
         self.document.add_paragraph('Размер уставного капитала:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.ystav_kap + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.capital.amount + '\n')
 
         self.document.add_page_break()
 
         self.document.add_paragraph('Юридический адрес компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.company_adress + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.location_adress.address.index} {self.comp.location_adress.address.city.capitalize()} {self.comp.location_adress.address.street.capitalize()} {self.comp.location_adress.address.building} {self.comp.location_adress.address.appartment}\n')
         
         self.document.add_paragraph('Официальный сайт и интернет-ресурсы компании:\n\n').style = self.document.styles['Heading 1']
 
         self.document.add_paragraph('Филиалы и представительства:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.branches_text + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.branches_lst + '\n')
         
         self.document.add_paragraph('Учредители компании:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.founders_text + '\n')
         
         self.document.add_paragraph('Руководители компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.directors_text + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c{self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.surname.capitalize()} {self.comp.chefs.name.capitalize()} {self.comp.chefs.paternal.capitalize()}\n\tИНН: {self.comp.chefs.inn}\n')
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.egrul_changes + '\n')
@@ -143,7 +149,7 @@ class DocText():
         self.document.add_page_break()
         
         self.document.add_paragraph('Виды деятельности: ').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.activities_text + '\n')
+        self.document.add_paragraph(list(map(lambda x: x + '\n', self.comp.okveds)))
         
 
 
