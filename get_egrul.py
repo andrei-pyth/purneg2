@@ -5,6 +5,7 @@ class SerRes():
     pass
 
 def main():
+    print('4')
     inn = input('INN ')
     browser = auth('http://egrul.nalog.ru/')
     window = browser.find_element_by_xpath('//*[@id="query"]')

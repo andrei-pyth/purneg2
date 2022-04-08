@@ -5,12 +5,17 @@ import xml.etree.ElementTree as ET
 def main(inn):
     get_srn.main() #Download archive from the web
     text = uzip.main() #Unzip the archive
-    res = None
-    while not res:
-        try: res = parse_snr(next(text), inn)
-        except StopIteration:
-            break
-    return res
+    if text:
+        res = None
+        while not res:
+            try: res = parse_snr(next(text), inn)
+            except StopIteration:
+                break
+        return res
+    else:
+        print('Файл не загрузился. Попробуем ещё раз.')
+        main(inn)
+
 
 def parse_snr(string, inn):
     root = ET.fromstring(string)

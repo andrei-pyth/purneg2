@@ -124,7 +124,7 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.founders_text + '\n')
         
         self.document.add_paragraph('Руководители компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c{self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.surname.capitalize()} {self.comp.chefs.name.capitalize()} {self.comp.chefs.paternal.capitalize()}\n\tИНН: {self.comp.chefs.inn}\n')
+        self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c {self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.surname.capitalize()} {self.comp.chefs.name.capitalize()} {self.comp.chefs.paternal.capitalize()}\n\tИНН: {self.comp.chefs.inn}\n')
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.egrul_changes + '\n')
@@ -149,7 +149,7 @@ class DocText():
         self.document.add_page_break()
         
         self.document.add_paragraph('Виды деятельности: ').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(list(map(lambda x: x + '\n', self.comp.okveds)))
+        self.document.add_paragraph('\n' + self.comp.okveds_text)
         
 
 
@@ -158,6 +158,7 @@ def save_doc(doc):
     doc.save(fl)
 
 def main():
+    print('1')
     comp = cr.Company()
     doc = DocText(comp)
     save_doc(doc.document)

@@ -9,4 +9,4 @@ def main():
             with zf.open(item) as file:
                 pg = file.read()
                 pg = pg.decode('utf-8')
-            yield pg
+    yield pg

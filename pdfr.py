@@ -6,8 +6,11 @@ from file_orgzer import get_text
 
 class EgrulData:
     def __init__(self):
+        get_egrul.main()
+        file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
         self.text = file_orgzer.get_text_main('egrul')
         self.okveds = self.get_okved(self.text)
+        self.okveds_text = self.get_okveds_text(self.okveds)
         self.full_name = re.search(r'Настоящая выписка содержит сведения о юридическом лице\n(.*)', self.text).group(1)
         self.ogrn = re.search(r'ОГРН(.*)', self.text).group(1)
         self.ogrn = self.ogrn.split()
@@ -17,11 +20,23 @@ class EgrulData:
         self.short_name = re.search(r'Сокращенное наименование на русском\nязыке\n(.*)', self.text).group(1)
         self.location_adress = Location(self.text)
         self.creation_method = re.search(r'Способ образования\n(.*)', self.text).group(1)
-        self.reg_date = re.search(r'Дата регистрации\n(.*)', self.text).group(1)
+        self.reg_date = self.get_reg_date(self.text)
         self.chefs = Chefs(self.text)
         self.capital = Capital(self.text)
         self.inn = self.get_inn(self.text)
         self.kpp = self.get_kpp(self.text)
+        self.filials = Filials(self.text)
+
+    def get_reg_date(self, text):
+        res = re.search(r'Дата регистрации\n(.*)', text)
+        if res:
+            return res.group(1)
+        else:
+            res = re.search(r'Дата регистрации до 1 июля 2002 года\n(.*)', text)
+            if res:
+                return res.group(1)
+            else:
+                return 'не найдено'
 
     def get_kpp(self, text):
         res = re.search(r'КПП юридического лица\n(.*)', text).group(1)
@@ -56,6 +71,12 @@ class EgrulData:
             else:
                 txt += f'{it} '
 
+    def get_okveds_text(self, text):
+        txt = ''
+        for item in text:
+            txt += item + '/n'
+        return txt
+
 class Location(EgrulData):
     def __init__(self, text):
         self.text = get_text(r'Место нахождения и адрес юридического лица\n', text)
@@ -72,7 +93,6 @@ class LocationAddress(Location):
         self.text = get_text(r'Адрес юридического лица\n', text)
         self.address = re.search(r'Адрес юридического лица\n(.*\n){5}', text).group(0).split('\n')
         self.address = self.address[1:-1]
-        print(self.address)
         self.index, self.city, self.street, self.building, *self.appartment = self.address
         self.grn, self.reg_date = EgrulData.grn_reg_date(self, self.text)
 
@@ -102,16 +122,8 @@ class Capital(EgrulData):
         print(self.amount)
         self.grn, self.reg_date = EgrulData.grn_reg_date(self, self.text)
 
-def main():
-    get_egrul.main()
-    file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
-    res = EgrulData()
-    return res
-
-if __name__ == '__main__':
-    main()
-
-
-
-
+class Filials(EgrulData):
+    def __init__(self, text):
+        self._text = get_text(r'Адрес места нахождения филиала на\nтерритории Российской Федерации\n(.*){5}', text)
+        self
 

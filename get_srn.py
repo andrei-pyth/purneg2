@@ -14,7 +14,11 @@ def get_srn():
         lnk = window.get_attribute('href')
         print(f'Ссылка на базу данных найдена!!!  ===>  {lnk}')
         browser.quit()
-        wget.download(lnk)
+        try:
+            wget.download(lnk)
+        except:
+            print('Загрузка базы СРН не удалась. Попробуем снова.')
+            get_srn()
     else:
         print('Ссылка на базу данных НЕ найдена!!!')
 

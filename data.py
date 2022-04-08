@@ -4,8 +4,9 @@ import take_srn
 import read_info_okfs
 
 class Company(pdfr.EgrulData, read_info_okfs.Okfs):
-
+    
     def __init__(self):
+        print('2')
         self.__init__ = pdfr.EgrulData.__init__(self)
         self.__init__ = read_info_okfs.Okfs.__init__(self)
         self.srn = self.srn(str(self.inn))
@@ -34,7 +35,7 @@ class Company(pdfr.EgrulData, read_info_okfs.Okfs):
 
     def srn_for_text(self, srn):
         if srn == 'ОСН':
-            return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов у контрагента не содержит)'
+            return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов налогообложения у контрагента не содержит)'
         else: return srn
 
     def srn(self, inn):
