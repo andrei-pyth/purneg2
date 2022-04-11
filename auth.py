@@ -2,7 +2,7 @@ from selenium import webdriver
 
 def auth(url):
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
+    #options.add_argument('--headless')
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--no-sandbox')
@@ -19,7 +19,8 @@ def auth(url):
       "download.default_directory": r"/home/chelnokov.a.a@kd-mid.lan/git/purneg/purneg2",
       "download.prompt_for_download": False,
       "download.directory_upgrade": True,
-      "safebrowsing.enabled": True
+      "safebrowsing.enabled": True,
+      "plugins.always_open_pdf_externally": True
     })
     browser = webdriver.Chrome(executable_path=r'/usr/bin/chromedriver', chrome_options=options)
     browser.get(url)

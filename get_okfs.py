@@ -22,4 +22,3 @@ def main(inn):
             EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[2]/div/div/div/button[2]'))
             )
     pdf_report_button.click()
-    sleep(5)

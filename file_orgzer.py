@@ -5,7 +5,10 @@ from time import sleep
 
 def get_text(pattern, text):
     res = re.search(pattern, text)
-    return text[res.span()[1]:]
+    if res:
+        return text[res.span()[1]:]
+    else:
+        return
 
 def get_text_main(file):
     with fitz.open(f'pdf_files/{file}.pdf') as doc:

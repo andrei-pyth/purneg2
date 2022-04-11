@@ -69,7 +69,7 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.short_name + '\n')
                 
         self.document.add_paragraph('Налоговый режим:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.srn_for_text + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.srn + '\n')
         
         self.document.add_paragraph('Форма собственности:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.okfs_text + '\n')
@@ -113,18 +113,19 @@ class DocText():
         self.document.add_page_break()
 
         self.document.add_paragraph('Юридический адрес компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n\t{self.comp.location_adress.address.index} {self.comp.location_adress.address.city.capitalize()} {self.comp.location_adress.address.street.capitalize()} {self.comp.location_adress.address.building} {self.comp.location_adress.address.appartment}\n')
+        self.document.add_paragraph(f'\n\t{self.comp.location_adress.address.index} {self.comp.location_adress.address.city.capitalize()} {self.comp.location_adress.address.street.capitalize()} {self.comp.location_adress.address.building} {self.comp.location_adress.address.appartment[0]}\n')
         
         self.document.add_paragraph('Официальный сайт и интернет-ресурсы компании:\n\n').style = self.document.styles['Heading 1']
 
         self.document.add_paragraph('Филиалы и представительства:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.branches_lst + '\n')
+        self.document.add_paragraph('\n\t' + self.comp.filials.filials + '\n')
         
         self.document.add_paragraph('Учредители компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.founders_text + '\n')
+        for count, item in enumerate(self.comp.founders.persons):
+            self.document.add_paragraph(f'\n\t{count+1}) {item.surname.capitalize()}, {item.name.capitalize()}, {item.paternal.capitalize()} \n\tИНН: {item.inn}\n\tc {item.reg_date}')
         
         self.document.add_paragraph('Руководители компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c {self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.surname.capitalize()} {self.comp.chefs.name.capitalize()} {self.comp.chefs.paternal.capitalize()}\n\tИНН: {self.comp.chefs.inn}\n')
+        self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c {self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.person.surname.capitalize()} {self.comp.chefs.person.name.capitalize()} {self.comp.chefs.person.paternal.capitalize()}\n\tИНН: {self.comp.chefs.person.inn}\n')
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.egrul_changes + '\n')
@@ -158,7 +159,6 @@ def save_doc(doc):
     doc.save(fl)
 
 def main():
-    print('1')
     comp = cr.Company()
     doc = DocText(comp)
     save_doc(doc.document)

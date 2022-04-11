@@ -3,15 +3,17 @@ import get_srn
 import xml.etree.ElementTree as ET
 
 def main(inn):
-    get_srn.main() #Download archive from the web
+    #get_srn.main() #Download archive from the web
     text = uzip.main() #Unzip the archive
     if text:
         res = None
         while not res:
-            try: res = parse_snr(next(text), inn)
+            try: 
+                res = parse_snr(next(text), inn)
+                if res: 
+                    return res
             except StopIteration:
-                break
-        return res
+                return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов налогообложения у контрагента не содержит)'
     else:
         print('Файл не загрузился. Попробуем ещё раз.')
         main(inn)
