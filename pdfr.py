@@ -9,7 +9,7 @@ class EgrulData:
         #get_egrul.main()
         #file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
         self.text = file_orgzer.get_text_main('egrul')
-        self.okveds = Okveds(self.text)
+        self.okveds = self.get_okveds(self.text, 'Код и наименование вида деятельности', Okveds)
         self.full_name = re.search(r'Настоящая выписка содержит сведения о юридическом лице\n(.*)', self.text).group(1)
         self.ogrn = re.search(r'ОГРН(.*)', self.text).group(1)
         self.ogrn = self.ogrn.split()
@@ -26,6 +26,36 @@ class EgrulData:
         self.inn = self.get_inn(self.text)
         self.kpp = self.get_kpp(self.text)
         self.filials = Filials(self.text)
+        self.status = self.get_status(self.text)
+        self.egrul_changes = self.get_okveds(
+                                             self.text,
+                                             'Сведения о документах, представленных при внесении записи в ЕГРЮЛ',
+                                             EgrulChanges
+                                             )
+
+
+    def get_status(self, text):
+        res = re.search(r'Сведения о прекращении юридического лица', text)
+        if res:
+            return 'организация является НЕ ДЕЙСТВУЮЩЕЙ!'
+        else:
+            return 'организация является действующей!'
+
+    def get_okveds(self, text, pattern, clas):
+        lst = []
+        text = text.split(pattern)
+        text = text[1:]
+        if clas == Okveds:
+            ind = re.search('Сведения о записях, внесенных в Единый государственный реестр юридических лиц', text[-1])
+            if ind:
+                ind1 = ind.span()[0]
+                text[-1] = text[-1][:ind1]
+        if clas == EgrulChanges:
+            text = text[:-1]
+        for item in text:
+            okv = clas(item)
+            lst.append(okv)
+        return lst
 
     def get_reg_date(self, text):
         res = re.search(r'Дата регистрации\n(.*)', text)
@@ -48,7 +78,10 @@ class EgrulData:
 
     def grn_reg_date(self, text):
         res = re.search(r'ГРН и дата внесения в ЕГРЮЛ записи,\nсодержащей указанные сведения\n(.*)\n(.*)', text)
+        if not res:
+            res = re.search(r'ГРН и дата внесения записи в ЕГРЮЛ\n(.*)\n(.*)', text)
         return res.group(1), res.group(2)
+            
 
 class Location(EgrulData):
     def __init__(self, text):
@@ -116,9 +149,7 @@ class Capital(EgrulData):
     def __init__(self, text):
         self.text = get_text(r'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде\n', text)
         self.type = re.search(r'Вид\n(.*)', self.text).group(1)
-        print(self.type, '====> Данные о виде капитала получены')
         self.amount = re.search(r'Размер \(в рублях\)\n(.*)', self.text).group(1)
-        print(self.amount)
         self.grn, self.reg_date = EgrulData.grn_reg_date(self, self.text)
 
 class Filials(EgrulData):
@@ -131,13 +162,58 @@ class Filials(EgrulData):
 
 class Okveds(EgrulData):
     def __init__(self, text):
-        self._text = text.split('Код и наименование вида деятельности')
-        self._text = self._text[1:-1]
-        self.okveds = self._text
+        self._text = text
+        self.number = re.search(r'\n(.*)[А-Я]', self._text).group(1)
+        self.number = self.number[:-1]
+        self.name = self.get_name(self._text)
+        self.grn, self.reg_date = EgrulData.grn_reg_date(self, self._text)
 
+    def get_name(self, text):
+        txt = clean_text(text)
+        ind3 = re.search('[А-Я]', txt).span()[1]
+        ind3 -= 1
+        txt = txt[ind3:]
+        txt = txt.split('\n')
+        txt = ' '.join(txt)
+        return txt
+
+class EgrulChanges(EgrulData):
+    def __init__(self, text):
+        self._text = text
+        self.document = clean_text(self._text)
+        self.document = self.document.split('\n')
+        self.document = ' '.join(self.document)
+        self.grn, self.reg_date = EgrulData.grn_reg_date(self, self._text)
+
+def clean_text(text):
+
+    ind = re.search('ГРН и дата', text)
+    if ind:
+        ind1 = ind.span()[0]
+        text = text[:ind1]
+
+    ind2 = re.search('Страница \d', text)
+    if ind2:
+        ind3 = ind2.span()[0]
+        text = text[:ind3]
+
+    ind4 = re.search('Сведения о свидетельстве, подтверждающем факт', text)
+    if ind4:
+        ind5 = ind4.span()[0]
+        text = text[:ind5]
+
+    txt = re.sub('\n\d+\n', '', text)
+
+    txt = re.sub('Наименование документа', '', txt)
+
+    txt = re.sub('ДОКУМЕНТ ОБ ОПЛАТЕ\nГОСУДАРСТВЕННОЙ ПОШЛИНЫНомер документа\d+\nДата документа\n.*\n', '', txt)
+    return txt
 
 def make_capitalize(text):
     text = text.split()
     text = text[0].lower()
     text = text[1].capitalize()
     return text
+
+if '__name__' == '__main__':
+    EgrulData()

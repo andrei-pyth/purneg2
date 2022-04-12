@@ -128,7 +128,7 @@ class DocText():
         self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c {self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.person.surname.capitalize()} {self.comp.chefs.person.name.capitalize()} {self.comp.chefs.person.paternal.capitalize()}\n\tИНН: {self.comp.chefs.person.inn}\n')
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.egrul_changes + '\n')
+        self.document.add_paragraph(f'\n1) {self.egrul_changes[-1].document}\n   {self.egrul_changes[-1].reg_date\n\n2) {self.egrul_changes[-2].document}\n   {self.egrul_changes[-2].reg_date}\n\n3) {self.egrul_changes[-3].document\n {self.egrul_changes[-3].reg_date}\n\n')
         
         self.document.add_paragraph('Опубликованные юридически значимые факты:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.important_facts + '\n')
@@ -150,7 +150,8 @@ class DocText():
         self.document.add_page_break()
         
         self.document.add_paragraph('Виды деятельности: ').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n' + self.comp.okveds_text)
+        for item in self.comp.okveds:
+            self.document.add_paragraph(f'\n{self.comp.okveds.number}    {self.comp.okveds.name};)
         
 
 
