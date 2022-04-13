@@ -3,6 +3,7 @@ import pdfr
 import take_srn
 import take_okfs
 import take_bfo
+#import get_gos_kont
 
 class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
     
@@ -19,7 +20,6 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
         self.gos_kontrakt = '---' 
         self.gos_zakupka = '---'
         self.current_text = self.get_current_text()
-        self.important_facts = '---'
         self.factors = '---'
         self.ved = '---'
 

@@ -3,6 +3,50 @@ import fitz
 import os
 from time import sleep
 
+def grn_reg_date(text):
+    res = re.search(r'ГРН и дата внесения в ЕГРЮЛ записи,\nсодержащей указанные сведения\n(.*)\n(.*)', text)
+    if not res:
+        res = re.search(r'ГРН и дата внесения записи в ЕГРЮЛ\n(.*)\n(.*)', text)
+    return res.group(1), res.group(2)
+
+def slt_jn(text):
+    text = text.split('\n')
+    return ' '.join(text)
+
+
+def clean_text(text):
+
+    ind = re.search('ГРН и дата', text)
+    if ind:
+        ind1 = ind.span()[0]
+        text = text[:ind1]
+
+    ind2 = re.search('Страница \d', text)
+    if ind2:
+        ind3 = ind2.span()[0]
+        text = text[:ind3]
+
+    ind4 = re.search('Сведения о свидетельстве, подтверждающем факт', text)
+    if ind4:
+        ind5 = ind4.span()[0]
+        text = text[:ind5]
+
+    txt = re.sub('\n\d+\n', '', text)
+
+    txt = re.sub('Наименование документа', '', txt)
+
+    txt = re.sub('ДОКУМЕНТ ОБ ОПЛАТЕ\nГОСУДАРСТВЕННОЙ ПОШЛИНЫНомер документа\d+\nДата документа\n.*\n', '', txt)
+    return txt
+
+if '__name__' == '__main__':
+    EgrulData()
+
+def make_capitalize(text):
+    text = text.split()
+    text[0] = text[0].lower()
+    text[1] = text[1].capitalize()
+    return text
+
 def get_text(pattern, text):
     res = re.search(pattern, text)
     if res:
