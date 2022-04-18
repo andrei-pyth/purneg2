@@ -5,8 +5,8 @@ import file_orgzer as fo
 
 class EgrulData:
     def __init__(self):
-        #get_egrul.main()
-        #fo.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
+        get_egrul.main()
+        fo.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
         self._text = fo.get_text_main('egrul')
         self.okveds = self.get_okveds(
                                       self._text,
@@ -35,7 +35,7 @@ class EgrulData:
                                              'Сведения о документах, представленных при внесении записи в ЕГРЮЛ',
                                              EgrulChanges
                                              )
-        self.facts = Facts()
+        self.facts = '---'
 
     def get_status(self, text):
         res = re.search(r'Сведения о прекращении юридического лица', text)
@@ -169,9 +169,12 @@ class EgrulChanges(EgrulData):
         self._text = text
         self._document = fo.clean_text(self._text)
         self.document = fo.slt_jn(self._document) 
-        self._reason = re.search(r'Причина внесения записи в ЕГРЮЛ\n((.*\n)*)\d+', self._text)
+        self._reason = re.search(r'Причина внесения записи в ЕГРЮЛ\n(.*\n)\d+', self._text)
         if self._reason:
             self.reason = fo.slt_jn(self._reason.group(1))
+        else:
+            print('Причина внесения изменений в ЕГРЮЛ не получена')
+            self.reason = '---'
         self.grn, self.reg_date = fo.grn_reg_date(self._text)
 
 class Facts(EgrulData):

@@ -1,9 +1,11 @@
 import uzip
 import get_srn
 import xml.etree.ElementTree as ET
+from time import sleep
 
 def main(inn):
-    #get_srn.main() #Download archive from the web
+    get_srn.main() #Download archive from the web
+    sleep(3)
     text = uzip.main() #Unzip the archive
     if text:
         res = None
@@ -15,7 +17,7 @@ def main(inn):
             except StopIteration:
                 return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов налогообложения у контрагента не содержит)'
     else:
-        print('Файл не загрузился. Попробуем ещё раз.')
+        print('Файл не загрузился или загрузился с ошибкой. Попробуем ещё раз.')
         main(inn)
 
 

@@ -38,13 +38,13 @@ def clean_text(text):
     txt = re.sub('ДОКУМЕНТ ОБ ОПЛАТЕ\nГОСУДАРСТВЕННОЙ ПОШЛИНЫНомер документа\d+\nДата документа\n.*\n', '', txt)
     return txt
 
-if '__name__' == '__main__':
-    EgrulData()
-
 def make_capitalize(text):
     text = text.split()
     text[0] = text[0].lower()
-    text[1] = text[1].capitalize()
+    try:
+        text[1] = text[1].capitalize()
+    except IndexError:
+        print('Ошибка в форматировани заглавных букв текста. Печатаю как есть. Проверьте форматирование в документе!')
     return text
 
 def get_text(pattern, text):

@@ -10,12 +10,14 @@ def main(inn):
             EC.presence_of_element_located((By.XPATH, '//*[@id="short-info"]/div[2]/button'))
             )
     button_overlay.click()
+    input('Bfo_search')
     window = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/main/div/div/div[2]/div[2]/a/div[1]/div[1]/div'))
             )
     window.click()
+    input('Bfo_search2')
     download_button = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/main/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/button'))
             )
     download_button.click()
-    sleep(20)
+    input('Bfo_download')

@@ -113,7 +113,16 @@ class DocText():
         self.document.add_page_break()
 
         self.document.add_paragraph('Юридический адрес компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n\t{self.comp.location_adress.address.index} {self.comp.location_adress.address.city.capitalize()} {self.comp.location_adress.address.street.capitalize()} {self.comp.location_adress.address.building} {self.comp.location_adress.address.appartment[0]}\n')
+        
+        lst1 = [self.comp.location_adress.address.index, self.comp.location_adress.address.city, self.comp.location_adress.address.street, self.comp.location_adress.address.building, self.comp.location_adress.address.appartment[0]]
+
+        for item1 in lst1:
+            try:
+                self.document.add_paragraph(f'\n\t{item1}')
+            except IndexError:
+                print('Error in formating occured =====> {item1}')
+                self.document.add_paragraph(self.comp.location_adress.address.address)
+                continue
         
         self.document.add_paragraph('Официальный сайт и интернет-ресурсы компании:\n\n').style = self.document.styles['Heading 1']
 
@@ -128,7 +137,13 @@ class DocText():
         self.document.add_paragraph(f'\n\t{self.comp.chefs.post.post_name} (c {self.comp.chefs.post.reg_date})\n\t{self.comp.chefs.person.surname.capitalize()} {self.comp.chefs.person.name.capitalize()} {self.comp.chefs.person.paternal.capitalize()}\n\tИНН: {self.comp.chefs.person.inn}\n')
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n{self.comp.egrul_changes[-1].reg_date} - {self.comp.egrul_changes[-1].reason}\n\n{self.comp.egrul_changes[-2].reg_date} - {self.comp.egrul_changes[-2].reason}\n\n{self.comp.egrul_changes[-3].reg_date} - {self.comp.egrul_changes[-3].reason}\n')
+        try:
+            self.document.add_paragraph(f'\n{self.comp.egrul_changes[-1].reg_date} - {self.comp.egrul_changes[-1].reason}\n\n{self.comp.egrul_changes[-2].reg_date} - {self.comp.egrul_changes[-2].reason}\n\n{self.comp.egrul_changes[-3].reg_date} - {self.comp.egrul_changes[-3].reason}\n')
+        except IndexError:
+            for item2 in self.comp.egrul_changes:
+                print(f'{item2.reg_date} ====> {item2.reason}\n\n\n')
+            print('IndexError')
+
         
         self.document.add_paragraph('Опубликованные юридически значимые факты:').style = self.document.styles['Heading 1']
         self.document.add_paragraph('\n\t' + self.comp.important_facts + '\n')
@@ -145,7 +160,7 @@ class DocText():
         self.document.add_page_break()
         
         self.document.add_paragraph('Иные значимые факторы: ').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n{self.comp.facts.fact_capital}\n')
+        self.document.add_paragraph(f'\n{self.comp.facts}\n')
         
         self.document.add_page_break()
         

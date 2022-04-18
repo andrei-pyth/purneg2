@@ -9,16 +9,20 @@ def main(inn):
     window = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="inn"]')))
     window.send_keys(inn)
+    input('send_keys')
     search_button = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, 
             '/html/body/websbor-root/div/div[1]/websbor-statistics-codes/websbor-simple-background/div/article/div/div[1]/div/form/div[3]/button'))
             )
     search_button.click()
+    input('search_button')
     export_button = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '/html/body/websbor-root/div/div[1]/websbor-statistics-codes/websbor-simple-background/div/article/div/div[2]/div/button'))
             )
     export_button.click()
+    input('export_button')
     pdf_report_button = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[2]/div/div/div/button[2]'))
             )
     pdf_report_button.click()
+    input('Download')

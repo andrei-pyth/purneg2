@@ -5,7 +5,9 @@ from file_orgzer import get_text
 
 class Okfs:
 
-    def __init__(self):
+    def __init__(self, inn):
+        get_okfs.main(inn)
+        file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/okfs.pdf', 'ОКФС')
         self._text = file_orgzer.get_text_main('okfs')
         self._text = get_text(r'Расшифровка кодов ОК ТЭИ', self._text)
         self.okpo = re.search(r'ОКПО\):\n(\d+)', self._text).group(1)
@@ -21,7 +23,4 @@ class Okfs:
         self.okopf_text = re.search(r'ОКОПФ\):\n(\d+)\s\((.*)\)', self._text).group(2)
          
 def main(inn):
-    get_okfs.main()
-    file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/okfs.pdf', 'ОКФС')
-    res = Okfs()
-    return res
+    return Okfs(inn)

@@ -16,7 +16,8 @@ def get_srn():
         browser.quit()
         try:
             wget.download(lnk)
-        except:
+            sleep(2)
+        except urllib.error.HTTPError:
             print('Загрузка базы СРН не удалась. Попробуем снова.')
             get_srn()
     else:
