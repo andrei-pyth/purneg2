@@ -7,17 +7,15 @@ from selenium.webdriver.support import expected_conditions as EC
 def main(inn):
     browser = auth.auth(f'https://bo.nalog.ru/search?query={inn}')
     button_overlay = WebDriverWait(browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="short-info"]/div[2]/button'))
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="short-info"]/div[2]/button'))
             )
     button_overlay.click()
-    input('Bfo_search')
     window = WebDriverWait(browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/main/div/div/div[2]/div[2]/a/div[1]/div[1]/div'))
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/main/div/div/div[2]/div[2]/a/div[1]/div[1]/div'))
             )
     window.click()
-    input('Bfo_search2')
     download_button = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/main/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/button'))
             )
     download_button.click()
-    input('Bfo_download')
+    sleep(2)

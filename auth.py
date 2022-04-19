@@ -2,7 +2,7 @@ from selenium import webdriver
 
 def auth(url):
     options = webdriver.ChromeOptions()
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--no-sandbox')

@@ -12,6 +12,9 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
         self.__init__ = take_okfs.Okfs.__init__(self, self.inn)
         self.__init__ = take_bfo.Fo.__init__(self, self.inn)
         self.srn = take_srn.main(str(self.inn))
+        if not self.income:
+            self.income_this_year = self.income_pure_this_year
+            self.income_last_year = self.income_pure_last_year
         self.company_staff = '---'
         self.common_info_text = input('Введите общую информацию о компании: ')
         self.telef = '---' 

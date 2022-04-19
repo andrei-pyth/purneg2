@@ -1,22 +1,32 @@
 from time import sleep
 from auth import auth
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class SerRes():
     pass
 
 def main():
-    print('4')
     inn = input('INN ')
     browser = auth('http://egrul.nalog.ru/')
-    window = browser.find_element_by_xpath('//*[@id="query"]')
+    window = WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="query"]'))
+            )
     window.send_keys(inn)
-    window2 = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div/form/div/div[1]/div[4]/div/div[1]/div/ul/li')
+    window2 = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/form/div/div[1]/div[4]/div/div[1]/div/ul/li'))
+            )
     window2.click()
     browser.switch_to.frame('uniDialogFrame')
     sleep(2)
-    button = browser.find_element_by_xpath('//*[@id="btn_toggle"]')
+    button = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="btn_toggle"]'))
+            )
     button.click()
-    button2 = browser.find_element_by_xpath('//*[@id="btn_ok"]')
+    button2 = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="btn_ok"]'))
+            )
     button2.click()
     browser.switch_to.default_content()
     browser.find_element_by_xpath('//*[@id="btnSearch"]').click()

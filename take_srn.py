@@ -4,15 +4,19 @@ import xml.etree.ElementTree as ET
 from time import sleep
 
 def main(inn):
-    get_srn.main() #Download archive from the web
-    sleep(3)
+    #get_srn.main() #Download archive from the web
+    #sleep(3)
     text = uzip.main() #Unzip the archive
+    count = 0
     if text:
         res = None
         while not res:
             try: 
                 res = parse_snr(next(text), inn)
-                if res: 
+                count += 1
+                print(f'{count} ====> {res}')
+                if res:
+                    print(res)
                     return res
             except StopIteration:
                 return 'ОСН\n(база данных ФНС на текущий момент сведений о наличии специальных режимов налогообложения у контрагента не содержит)'

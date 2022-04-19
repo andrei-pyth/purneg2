@@ -5,14 +5,10 @@ import file_orgzer as fo
 
 class EgrulData:
     def __init__(self):
-        get_egrul.main()
+        #get_egrul.main()
         fo.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
         self._text = fo.get_text_main('egrul')
-        self.okveds = self.get_okveds(
-                                      self._text,
-                                      'Код и наименование вида деятельности',
-                                      Okveds
-                                      )
+        self.okveds = self.get_okveds(self._text)
         self.full_name = re.search(r'Настоящая выписка содержит сведения о юридическом лице\n(.*)', self._text).group(1)
         self.ogrn = re.search(r'ОГРН(.*)', self._text).group(1)
         self.ogrn = self.ogrn.split()
@@ -30,11 +26,7 @@ class EgrulData:
         self.kpp = re.search(r'КПП юридического лица\n(.*)', self._text).group(1)
         self.filials = Filials(self._text)
         self.status = self.get_status(self._text)
-        self.egrul_changes = self.get_okveds(
-                                             self._text,
-                                             'Сведения о документах, представленных при внесении записи в ЕГРЮЛ',
-                                             EgrulChanges
-                                             )
+        self.egrul_changes = self.get_egrul_changes(self._text)
         self.facts = '---'
 
     def get_status(self, text):
@@ -44,20 +36,21 @@ class EgrulData:
         else:
             return 'ЮЛ является действующим.'
 
-    def get_okveds(self, text, pattern, clas):
+    def get_egrul_changes(self, text):
         lst = []
-        text = text.split(pattern)
+        text = text.split('Сведения о записях, внесенных в Единый государственный реестр юридических лиц')
         text = text[1:]
-        if clas == Okveds:
-            ind = re.search('Сведения о записях, внесенных в Единый государственный реестр юридических лиц', text[-1])
-            if ind:
-                ind1 = ind.span()[0]
-                text[-1] = text[-1][:ind1]
-        if clas == EgrulChanges:
-            text = text[:-1]
+        text = text[0].split('Сведения о документах, представленных при внесении записи в ЕГРЮЛ')
         for item in text:
-            okv = clas(item)
-            lst.append(okv)
+            lst.append(EgrulChanges(item))
+        return lst
+
+    def get_okveds(self, text):
+        lst = []
+        text = text.split('Код и наименование вида деятельности')
+        text = text[1:]
+        for item in text:
+            res = Okveds(item)
         return lst
 
     def get_reg_date(self, text):
@@ -151,13 +144,13 @@ class Filials(EgrulData):
 class Okveds(EgrulData):
     def __init__(self, text):
         self._text = text
-        self.number = re.search(r'\n(.*)[А-Я]', self._text).group(1)
+        self._number = re.search(r'\n(.*)((\w+\n)*)\d', self._text)
+        self.number = self._number.group(1)
         self.number = self.number[:-1]
-        self.name = self.get_name(self._text)
+        self.name = self._number.group(3)
         self.grn, self.reg_date = fo.grn_reg_date(self._text)
 
     def get_name(self, text):
-        txt = fo.clean_text(text)
         ind3 = re.search('[А-Я]', txt).span()[1]
         ind3 -= 1
         txt = txt[ind3:]
@@ -167,11 +160,9 @@ class Okveds(EgrulData):
 class EgrulChanges(EgrulData):
     def __init__(self, text):
         self._text = text
-        self._document = fo.clean_text(self._text)
-        self.document = fo.slt_jn(self._document) 
-        self._reason = re.search(r'Причина внесения записи в ЕГРЮЛ\n(.*\n)\d+', self._text)
+        self._reason = re.search(r'Причина внесения записи в ЕГРЮЛ\n((.*\n)*)\d+', self._text)
         if self._reason:
-            self.reason = fo.slt_jn(self._reason.group(1))
+            self.reason = fo.slt_jn(self._reason.group(2))
         else:
             print('Причина внесения изменений в ЕГРЮЛ не получена')
             self.reason = '---'
