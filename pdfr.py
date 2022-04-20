@@ -1,7 +1,10 @@
 import re
 import get_egrul
 import file_orgzer as fo
-
+from okveds import Okveds
+from egrul_changes import EgrulChanges
+from capital import Capital
+from location import Location
 
 class EgrulData:
     def __init__(self):
@@ -30,27 +33,23 @@ class EgrulData:
         self.facts = '---'
 
     def get_status(self, text):
-        res = re.search(r'Сведения о прекращении юридического лица', text)
-        if res:
+        if re.search(r'Сведения о прекращении юридического лица', text):
             return 'ЮЛ является НЕ ДЕЙСТВУЮЩИМ!'
         else:
             return 'ЮЛ является действующим.'
 
     def get_egrul_changes(self, text):
         lst = []
-        text = text.split('Сведения о записях, внесенных в Единый государственный реестр юридических лиц')
-        text = text[1:]
-        text = text[0].split('Сведения о документах, представленных при внесении записи в ЕГРЮЛ')
-        for item in text:
+        items = re.findall(r'ГРН и дата внесения записи в ЕГРЮЛ\n(.*)\n(.*)\n(\d+\n)?(Страница(.*)\n((.*)\n){10})?Причина внесения записи в ЕГРЮЛ\n(\D+\s)*\d+', text)
+        for item in items:
             lst.append(EgrulChanges(item))
         return lst
 
     def get_okveds(self, text):
         lst = []
-        text = text.split('Код и наименование вида деятельности')
-        text = text[1:]
-        for item in text:
-            res = Okveds(item)
+        items = re.findall(r'Код и наименование вида деятельности\n((\d+(\.)?)*)\s((\D+\s)*)(\d+\n)?(Страница(.*)\n((.*)\n){10})?ГРН и дата внесения в ЕГРЮЛ записи,\nсодержащей указанные сведения\n(.*)\n(.*)', text)
+        for item in items:
+            lst.append(Okveds(item))
         return lst
 
     def get_reg_date(self, text):
@@ -63,27 +62,6 @@ class EgrulData:
                 return res.group(1)
             else:
                 return 'не найдено'
-
-class Location(EgrulData):
-    def __init__(self, text):
-        self.text = fo.get_text(r'Место нахождения и адрес юридического лица\n', text)
-        self.region = LocationRegion(self.text)
-        self.address = LocationAddress(self.text)
-
-class LocationRegion(Location):
-    def __init__(self, text):
-        self.region_name = re.search(r'Место нахождения юридического лица\n(.*)', text).group(1)
-        self.grn, self.reg_date = fo.grn_reg_date(text)
-
-class LocationAddress(Location):
-    def __init__(self, text):
-        self._text = fo.get_text(r'Адрес юридического лица\n', text)
-        self._address = re.search(r'Адрес юридического лица\n(.*\n){5}', text).group(0).split('\n')
-        self.address = self._address[1:-1]
-        self.index, self.city, self.street, self.building, *self.appartment = self.address
-        self.grn, self.reg_date = fo.grn_reg_date(self._text)
-        self.city = fo.make_capitalize(self.city)
-        self.street = fo.make_capitalize(self.street)
 
 class Chefs(EgrulData):
     def __init__(self, text):
@@ -126,13 +104,6 @@ class Person(Chefs, Founders):
         self.inn = re.search(r'ИНН\n(.*)', text).group(1)
         self.grn, self.reg_date = fo.grn_reg_date(text)
 
-class Capital(EgrulData):
-    def __init__(self, text):
-        self._text = fo.get_text(r'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде\n', text)
-        self.type = re.search(r'Вид\n(.*)', self._text).group(1)
-        self.amount = re.search(r'Размер \(в рублях\)\n(.*)', self._text).group(1)
-        self.grn, self.reg_date = fo.grn_reg_date(self._text)
-
 class Filials(EgrulData):
     def __init__(self, text):
         self._text = fo.get_text(r'Адрес места нахождения филиала на\nтерритории Российской Федерации\n(.*){5}', text)
@@ -140,33 +111,6 @@ class Filials(EgrulData):
             self.filials = 'hay'
         else:
             self.filials = 'Данных о филиалах организации не имеется.'
-
-class Okveds(EgrulData):
-    def __init__(self, text):
-        self._text = text
-        self._number = re.search(r'\n(.*)((\w+\n)*)\d', self._text)
-        self.number = self._number.group(1)
-        self.number = self.number[:-1]
-        self.name = self._number.group(3)
-        self.grn, self.reg_date = fo.grn_reg_date(self._text)
-
-    def get_name(self, text):
-        ind3 = re.search('[А-Я]', txt).span()[1]
-        ind3 -= 1
-        txt = txt[ind3:]
-        txt = fo.slt_jn(txt)
-        return txt
-
-class EgrulChanges(EgrulData):
-    def __init__(self, text):
-        self._text = text
-        self._reason = re.search(r'Причина внесения записи в ЕГРЮЛ\n((.*\n)*)\d+', self._text)
-        if self._reason:
-            self.reason = fo.slt_jn(self._reason.group(2))
-        else:
-            print('Причина внесения изменений в ЕГРЮЛ не получена')
-            self.reason = '---'
-        self.grn, self.reg_date = fo.grn_reg_date(self._text)
 
 class Facts(EgrulData):
     def __init__(self):
