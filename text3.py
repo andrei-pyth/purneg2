@@ -140,10 +140,10 @@ class DocText():
 
         self.document.add_paragraph('Последние изменения в ЕГРЮЛ:').style = self.document.styles['Heading 1']
         try:
-            self.document.add_paragraph(f'\n{self.comp.egrul_changes[-1].reg_date} - {self.comp.egrul_changes[-1].reason}\n\n{self.comp.egrul_changes[-2].reg_date} - {self.comp.egrul_changes[-2].reason}\n\n{self.comp.egrul_changes[-3].reg_date} - {self.comp.egrul_changes[-3].reason}\n')
+            self.document.add_paragraph(f'\n{self.comp.egrul_changes[-1].date} - {self.comp.egrul_changes[-1].reason}\n\n{self.comp.egrul_changes[-2].date} - {self.comp.egrul_changes[-2].reason}\n\n{self.comp.egrul_changes[-3].date} - {self.comp.egrul_changes[-3].reason}\n')
         except IndexError:
             for item2 in self.comp.egrul_changes:
-                print(f'{item2.reg_date} ====> {item2.reason}\n\n\n')
+                print(f'{item2.date} ====> {item2.reason}\n\n\n')
             print('IndexError')
 
         

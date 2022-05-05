@@ -51,6 +51,8 @@ def show_rs2_res(res):
         print('Найдено слишком много организаций. Уточните параметры поиска, указав ИНН или ОГРН.')
     elif not display_objs:
         print('По Вашему запросу ничего не найдено.')
+    elif len(display_objs) == 1:
+        print('Выписка или выписки из ЕГРЮЛ скачаны.')
     else:
         make_choice(display_objs)
         print('Выписка или выписки из ЕГРЮЛ скачаны.')
