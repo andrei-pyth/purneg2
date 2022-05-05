@@ -5,6 +5,7 @@ from okveds import Okveds
 from egrul_changes import EgrulChanges
 from capital import Capital
 from location import Location
+from founders import Founders
 
 class EgrulData:
     def __init__(self):
@@ -76,33 +77,6 @@ class Post(Chefs):
         self._text = fo.get_text(r'Должность\n(.*)', text)
         self.post_name = re.search(r'Должность\n(.*)', text).group(1)
         self.grn, self.reg_date = fo.grn_reg_date(self._text)
-
-class Founders(EgrulData):
-    def __init__(self, text):
-        self._begin_text = fo.get_text(r'Сведения об участниках / учредителях юридического лица', text)
-        mark_end = re.search(r'Сведения об учете в налоговом органе', text)
-        self._text = self._begin_text[:mark_end.span()[0]]
-        self.persons = self.make_persons(self._text)
-    
-    def make_persons(self, text):
-        prs = []
-        pers = re.finditer(r'Фамилия\nИмя\nОтчество\n', text)
-        points = list(map(lambda x: x.span()[0], pers))
-        points.pop(0)
-        for item in points:
-            res = text[:item]
-            person = Person(res)
-            text = text[item:]
-            prs.append(person)
-        return prs
-        
-class Person(Chefs, Founders):
-    def __init__(self, text):
-        self._person = re.search(r'Фамилия\nИмя\nОтчество\n(.*\n){3}', text).group(0).split('\n')
-        self._person = self._person[3:-1]
-        self.surname, self.name, self.paternal = self._person
-        self.inn = re.search(r'ИНН\n(.*)', text).group(1)
-        self.grn, self.reg_date = fo.grn_reg_date(text)
 
 class Filials(EgrulData):
     def __init__(self, text):
