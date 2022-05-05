@@ -4,8 +4,9 @@ import xml.etree.ElementTree as ET
 from time import sleep
 
 def main(inn):
-    #get_srn.main() #Download archive from the web
-    #sleep(3)
+    inn = str(inn)
+    get_srn.main() #Download archive from the web
+    sleep(3)
     text = uzip.main() #Unzip the archive
     count = 0
     if text:

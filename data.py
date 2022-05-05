@@ -9,6 +9,7 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
     
     def __init__(self):
         self.__init__ = pdfr.EgrulData.__init__(self)
+        print('Данные из ЕГРЮЛ получены')
         self.__init__ = take_okfs.Okfs.__init__(self, self.inn)
         self.__init__ = take_bfo.Fo.__init__(self, self.inn)
         self.srn = take_srn.main(str(self.inn))

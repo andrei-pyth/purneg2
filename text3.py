@@ -114,8 +114,10 @@ class DocText():
 
         self.document.add_paragraph('Юридический адрес компании:').style = self.document.styles['Heading 1']
         
-        lst1 = [self.comp.location_adress.address.index, self.comp.location_adress.address.city, self.comp.location_adress.address.street, self.comp.location_adress.address.building, self.comp.location_adress.address.appartment[0]]
-
+        try:
+            lst1 = [self.comp.location_adress.address.index, self.comp.location_adress.address.city, self.comp.location_adress.address.street, self.comp.location_adress.address.building, self.comp.location_adress.address.appartment[0]]
+        except AttributeError:
+            lst1 = self.comp.location_adress.address
         for item1 in lst1:
             try:
                 self.document.add_paragraph(f'\n\t{item1}')

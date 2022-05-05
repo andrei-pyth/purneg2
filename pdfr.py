@@ -8,7 +8,7 @@ from location import Location
 
 class EgrulData:
     def __init__(self):
-        #get_egrul.main()
+        get_egrul.main()
         fo.org_files('pdf_files', '.pdf', 'pdf_files/egrul.pdf', 'ЕГРЮЛ')
         self._text = fo.get_text_main('egrul')
         self.okveds = self.get_okveds(self._text)
