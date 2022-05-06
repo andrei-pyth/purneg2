@@ -18,3 +18,5 @@ class Location:
         self.reg_date = self._lst.pop(-4)
         self.grn = self._lst.pop(-4)
         self.address = self._lst[:-6]
+        self.map_photo = 'Here should be the map...'
+        self.verification_address = 'Here should be the verification phrase'

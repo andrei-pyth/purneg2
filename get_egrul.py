@@ -19,7 +19,6 @@ def main():
             )
     window2.click()
     browser.switch_to.frame('uniDialogFrame')
-    sleep(2)
     button = WebDriverWait(browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="btn_toggle"]'))
             )
@@ -30,7 +29,7 @@ def main():
     button2.click()
     browser.switch_to.default_content()
     browser.find_element_by_xpath('//*[@id="btnSearch"]').click()
-    sleep(10)
+    sleep(5)
     res = get_search_res(browser)
     if not res:
         print('По заданным параметрам в базе ЕГРЮЛ ничего не найдено')
@@ -52,7 +51,9 @@ def show_rs2_res(res):
     elif not display_objs:
         print('По Вашему запросу ничего не найдено.')
     elif len(display_objs) == 1:
+        display_objs[0].button.click()
         print('Выписка или выписки из ЕГРЮЛ скачаны.')
+        sleep(5)
     else:
         make_choice(display_objs)
         print('Выписка или выписки из ЕГРЮЛ скачаны.')

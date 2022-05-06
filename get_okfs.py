@@ -7,7 +7,6 @@ from time import sleep
 def main(inn):
     browser = auth('https://websbor.gks.ru/online/info')
     print('Получение сведений ОКФС')
-    #WebDriverWait(browser, 60).until(EC.visibility_of_all_elements_located)
     window = WebDriverWait(browser, 60).until(EC.presence_of_element_located((By.XPATH, '//*[@id="inn"]')))
     window.send_keys(inn)
     search_button = WebDriverWait(browser, 60).until(EC.element_to_be_clickable((By.XPATH, '/html/body/websbor-root/div/div[1]/websbor-statistics-codes/websbor-simple-background/div/article/div/div[1]/div/form/div[3]/button')))

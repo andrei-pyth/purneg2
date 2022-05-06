@@ -15,7 +15,7 @@ def main(inn):
             )
     window.click()
     download_button = WebDriverWait(browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/main/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/button'))
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/main/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/button'))
             )
     download_button.click()
-    sleep(2)
+    sleep(10)

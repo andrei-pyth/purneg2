@@ -6,6 +6,10 @@ from egrul_changes import EgrulChanges
 from capital import Capital
 from location import Location
 from founders import Founders
+from chefs import Chefs
+from filials import Filials
+from facts import Facts
+from lisences import Lisences #
 
 class EgrulData:
     def __init__(self):
@@ -14,6 +18,7 @@ class EgrulData:
         self._text = fo.get_text_main('egrul')
         self.okveds = self.get_okveds(self._text)
         self.full_name = re.search(r'Настоящая выписка содержит сведения о юридическом лице\n(.*)', self._text).group(1)
+        self.full_name_text = self.full_name.split('"')
         self.ogrn = re.search(r'ОГРН(.*)', self._text).group(1)
         self.ogrn = self.ogrn.split()
         self.ogrn = ''.join(self.ogrn)
@@ -32,6 +37,7 @@ class EgrulData:
         self.status = self.get_status(self._text)
         self.egrul_changes = self.get_egrul_changes(self._text)
         self.facts = '---'
+        self.lisences = Lisences()
 
     def get_status(self, text):
         if re.search(r'Сведения о прекращении юридического лица', text):
@@ -63,33 +69,3 @@ class EgrulData:
                 return res.group(1)
             else:
                 return 'не найдено'
-
-class Chefs(EgrulData):
-    def __init__(self, text):
-        self._begin_text = fo.get_text(r'Сведения о лице, имеющем право без доверенности действовать от имени юридического\nлица', text)
-        mark_end = re.search(r'Сведения об участниках /', text)
-        self._text = self._begin_text[:mark_end.span()[0]]
-        self.person = Person(self._text)
-        self.post = Post(self._text)
-
-class Post(Chefs):
-    def __init__(self, text):
-        self._text = fo.get_text(r'Должность\n(.*)', text)
-        self.post_name = re.search(r'Должность\n(.*)', text).group(1)
-        self.grn, self.reg_date = fo.grn_reg_date(self._text)
-
-class Filials(EgrulData):
-    def __init__(self, text):
-        self._text = fo.get_text(r'Адрес места нахождения филиала на\nтерритории Российской Федерации\n(.*){5}', text)
-        if self._text:
-            self.filials = 'hay'
-        else:
-            self.filials = 'Данных о филиалах организации не имеется.'
-
-class Facts(EgrulData):
-    def __init__(self):
-        self.fact_capital = self.get_cap_fact()
-
-    def get_cap_fact(self):
-        if int(self.capital.amount) <= 10000:
-            return 'Размер уставного капитала составляет минимальную сумму 10000 или меньше;'
