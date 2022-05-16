@@ -113,7 +113,7 @@ class DocText():
         self.document.add_page_break()
 
         self.document.add_paragraph('Юридический адрес компании:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(self.comp.location_adress.address.map_photo) 
+        self.document.add_paragraph(self.comp.location_adress.map_photo) 
         try:
             lst1 = [self.comp.location_adress.address.index, self.comp.location_adress.address.city, self.comp.location_adress.address.street, self.comp.location_adress.address.building, self.comp.location_adress.address.appartment[0]]
         except AttributeError:
@@ -154,26 +154,26 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.current_text + '\n')
 
         self.document.add_paragraph('Сведения об уплаченных организацией налогах и сборах:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.taxes + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.taxes}\n')
         
         self.document.add_paragraph('Сведения о заблокированных счетах:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.accounts_blocked + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.accounts_blocked}\n')
         
         self.document.add_paragraph('Данные о внешнеэкономической деятельности:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.ved + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.ved}\n')
         
         self.document.add_paragraph('Виды деятельности: ').style = self.document.styles['Heading 1']
         for count, item in enumerate(self.comp.okveds):
             self.document.add_paragraph(f'\n{self.comp.okveds[count].number}    {self.comp.okveds[count].name};')
 
         self.document.add_paragraph('Участие в государственных закупках или госконтрактах:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.gos_zakupka + '\n' + self.comp.gos_kontrakt + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.gos_zakupka}\n{self.comp.gos_kontrakt}\n')
         
         self.document.add_paragraph('Данные об имеющихся лицензиях:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.lisences + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.lisences}\n')
 
         self.document.add_paragraph('Данные о проверке благонадёжности:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph('\n\t' + self.comp.reliability + '\n')
+        self.document.add_paragraph(f'\n\t{self.comp.reliability}\n')
         
         self.document.add_page_break()
         

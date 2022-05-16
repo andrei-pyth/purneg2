@@ -1,2 +1,2 @@
-class Acoounts:
+class Accounts:
     pass

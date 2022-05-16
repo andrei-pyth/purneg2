@@ -38,7 +38,7 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
     def get_customer(self):
         first = 'ПАО Калужская сбытовая компания'
         second = 'АО Калужская городская энергетическая компания'
-        ch = input(f'Введите номер заказчика:\n1) {first}\n2) {second}\n\n ')
+        ch = int(input(f'Введите номер заказчика:\n1) {first}\n2) {second}\n\n '))
         if ch == 1:
             return first
         elif ch == 2:
