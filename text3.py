@@ -1,3 +1,4 @@
+import gdr
 import data as cr
 from docx import Document
 from docx.shared import Cm
@@ -197,6 +198,8 @@ def main():
     comp = cr.Company()
     doc = DocText(comp)
     save_doc(doc.document)
+    res = gdr.Gdrive()
+    fldr = res.make_folder(comp.short_name)
 
 if __name__ == '__main__':
     main()
