@@ -1,3 +1,5 @@
+import glob
+import os
 import gdr
 import data as cr
 from docx import Document
@@ -188,18 +190,24 @@ class DocText():
         
         self.document.add_page_break()
         
+def rm_files():
+    files = glob.glob('pdf_files/*', recursive=True)
+    for item in files:
+        os.remove(item)
 
-
-def save_doc(doc):
+def save_doc(doc, name):
     fl = input('Введите название файла с результатом: ')
     doc.save(fl)
+    res = gdr.Gdrive(name)
+    fldr = res.make_folder()
+    for item in os.listdir('pdf_files'):
+        res.file_upload(item)
 
 def main():
+    #rm_files()
     comp = cr.Company()
     doc = DocText(comp)
-    save_doc(doc.document)
-    res = gdr.Gdrive()
-    fldr = res.make_folder(comp.short_name)
+    save_doc(doc.document, comp.short_name)
 
 if __name__ == '__main__':
     main()

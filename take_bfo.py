@@ -8,12 +8,8 @@ class Fo:
         get_bfo.main(inn)
         file_orgzer.org_files('pdf_files', '.pdf', 'pdf_files/bfo.pdf', 'БФО')
         self._text = file_orgzer.get_text_main('bfo')
-        print(self._text)
         self.income_pure_or_not = ''
-        
         self.year = re.search(r'Код\nстроки\nНа 31 декабря\n(.*)', self._text).group(1)[:-5]
-        print(self.year)
-                
         self.income = re.search(r'\n2300\n(.*)\n(.*)', self._text)
         if self.income:
             self.income_this_year = self.income.group(1)

@@ -5,10 +5,12 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
 
 class Gdrive:
-    def __init__(self):
+    def __init__(self, folder):
         self.scopes = ['https://www.googleapis.com/auth/drive']
+        self.folder = folder
         self.auth()
 
     def auth(self):
@@ -53,18 +55,31 @@ class Gdrive:
             print(f'An error occurred: {error}')
 
 
-    def make_folder(self, dirname):
+    def make_folder(self):
         try:
             service = build('drive', 'v3', credentials=self.creds)
             file_metadata = {
-            'name': dirname,
+            'name': self.folder,
             'mimeType': 'application/vnd.google-apps.folder',
         }
             file_metadata['parents'] = ['1jwsdpBXt4PdP9YSHRVEgF6g51tfTEmgn']
             file = service.files().create(body=file_metadata,
                                             fields='id').execute()
+            self.folder_id = file.get('id')
             print ('Folder ID: %s' % file.get('id'))
         except HttpError as error:
             # TODO(developer) - Handle errors from drive API.
             print(f'An error occurred: {error}')
+
+    def file_upload(self, file):
+        service = build('drive', 'v3', credentials=self.creds)
+        file_metadata = {'name': file}
+        file_metadata['parents'] = [self.folder_id]
+        media = MediaFileUpload(f'pdf_files/{file}',
+                                mimetype='application/pdf')
+        file = service.files().create(body=file_metadata,
+                                            media_body=media,
+                                            fields='id').execute()
+        print ('File ID: %s' % file.get('id'))
+
 

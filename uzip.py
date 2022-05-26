@@ -1,9 +1,9 @@
 from zipfile import ZipFile
 from zipfile import BadZipFile
 
-def main():
+def main(file_name):
     try:
-        with ZipFile('zip_files/srn.zip') as zf:
+        with ZipFile(f'zip_files/{file_name}') as zf:
             lst = zf.namelist()
             print('Скачано {} файлов...'.format(len(lst)))
             print('Происходит поочередная проверка файлов архива предприятий с СРН...')
