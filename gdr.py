@@ -75,11 +75,18 @@ class Gdrive:
         service = build('drive', 'v3', credentials=self.creds)
         file_metadata = {'name': file}
         file_metadata['parents'] = [self.folder_id]
-        media = MediaFileUpload(f'pdf_files/{file}',
-                                mimetype='application/pdf')
-        file = service.files().create(body=file_metadata,
-                                            media_body=media,
-                                            fields='id').execute()
+        if 'pdf' in file:
+            media = MediaFileUpload(f'pdf_files/{file}',
+                                    mimetype='application/pdf')
+            file = service.files().create(body=file_metadata,
+                                          media_body=media,
+                                          fields='id').execute()
+        elif 'docx' in file:
+            media = MediaFileUpload(file,
+                                    mimetype='application/pdf')
+            file = service.files().create(body=file_metadata,
+                                          media_body=media,
+                                          fields='id').execute()
         print ('File ID: %s' % file.get('id'))
 
 

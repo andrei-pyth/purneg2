@@ -200,8 +200,11 @@ def save_doc(doc, name):
     doc.save(fl)
     res = gdr.Gdrive(name)
     fldr = res.make_folder()
-    for item in os.listdir('pdf_files'):
-        res.file_upload(item)
+    for pdf in os.listdir('pdf_files'):
+        res.file_upload(pdf)
+    for docx in os.listdir():
+        if 'docx' in docx:
+            res.file_upload(docx)
 
 def main():
     #rm_files()
