@@ -18,4 +18,4 @@ def main(inn):
             EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/main/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/button'))
             )
     download_button.click()
-    sleep(5)
+    sleep(10)

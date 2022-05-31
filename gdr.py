@@ -71,22 +71,24 @@ class Gdrive:
             # TODO(developer) - Handle errors from drive API.
             print(f'An error occurred: {error}')
 
-    def file_upload(self, file):
+    def file_upload(self, file_name):
         service = build('drive', 'v3', credentials=self.creds)
-        file_metadata = {'name': file}
+        file_metadata = {'name': file_name}
         file_metadata['parents'] = [self.folder_id]
-        if 'pdf' in file:
-            media = MediaFileUpload(f'pdf_files/{file}',
+        if 'pdf' in file_name:
+            media = MediaFileUpload(f'pdf_files/{file_name}',
                                     mimetype='application/pdf')
             file = service.files().create(body=file_metadata,
                                           media_body=media,
                                           fields='id').execute()
+            print ('File ID: %s' % file.get('id'))
+        '''
         elif 'docx' in file:
             media = MediaFileUpload(file,
                                     mimetype='application/pdf')
             file = service.files().create(body=file_metadata,
                                           media_body=media,
                                           fields='id').execute()
-        print ('File ID: %s' % file.get('id'))
+        '''
 
 

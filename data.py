@@ -5,7 +5,7 @@ import take_okfs
 import take_bfo
 import take_schs
 import taxes #
-import blocks #
+import take_blocks 
 import reliability #
 #import get_gos_kont
 
@@ -25,6 +25,7 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
                 'https://www.nalog.gov.ru/rn32/opendata/7707329152-sshr2019/',
                 'ССЧС'
                 )
+        self.accounts_blocked = take_blocks.main(self.inn)
         if not self.income:
             self.income_this_year = self.income_pure_this_year
             self.income_last_year = self.income_pure_last_year
@@ -40,7 +41,6 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
         self.facts = '---'
         self.important_facts = '---'
         self.taxes = taxes.Taxes()
-        self.accounts_blocked = blocks.Accounts()
         self.reliability = reliability.Reliability()
         self.applications = '---'
 

@@ -158,10 +158,10 @@ class DocText():
 
         self.document.add_paragraph('Сведения об уплаченных организацией налогах и сборах:').style = self.document.styles['Heading 1']
         self.document.add_paragraph(f'\n\t{self.comp.taxes}\n')
-        
+        '''
         self.document.add_paragraph('Сведения о заблокированных счетах:').style = self.document.styles['Heading 1']
         self.document.add_paragraph(f'\n\t{self.comp.accounts_blocked}\n')
-        
+        '''
         self.document.add_paragraph('Данные о внешнеэкономической деятельности:').style = self.document.styles['Heading 1']
         self.document.add_paragraph(f'\n\t{self.comp.ved}\n')
         
@@ -190,8 +190,8 @@ class DocText():
         
         self.document.add_page_break()
         
-def rm_files():
-    files = glob.glob('pdf_files/*', recursive=True)
+def rm_files(f_type):
+    files = glob.glob(f_type, recursive=True)
     for item in files:
         os.remove(item)
 
@@ -207,10 +207,13 @@ def save_doc(doc, name):
             res.file_upload(docx)
 
 def main():
-    #rm_files()
     comp = cr.Company()
     doc = DocText(comp)
     save_doc(doc.document, comp.short_name)
+    rm_files('pdf_files/*')
+    rm_files('zip_files/*')
+    rm_files('*.zip')
+    rm_files('*.pdf')
 
 if __name__ == '__main__':
     main()
