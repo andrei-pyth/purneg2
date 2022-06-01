@@ -1,4 +1,5 @@
 import os
+from time import sleep
 from zipfile import ZipFile
 from zipfile import BadZipFile
 
@@ -18,9 +19,10 @@ def get_file_blocks():
     lst = os.listdir()
     for item in lst:
         if '.zip' in item:
-            with ZipFile(item) as zf:
-                lst = zf.namelist()
-                for item1 in lst:
-                    if '.pdf' or '.PDF' in item1:
-                        zf.extract(item1, 'pdf_files/')
-                        os.rename(f'pdf_files/{item1}', 'pdf_files/blocks.pdf')
+            zf = ZipFile(item, 'r')
+    lst1 = zf.namelist()
+    for item1 in lst1:
+        if '.pdf' in item1:
+            fl = item1
+    zf.extract(fl, 'pdf_files/')
+    os.rename(f'pdf_files/{fl}', 'pdf_files/blocks.pdf')

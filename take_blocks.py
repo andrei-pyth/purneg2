@@ -5,10 +5,8 @@ from uzip import get_file_blocks as gfb
 def main(inn):
     gb.main(inn)
     gfb()
-    #text = gtm('blocks')
-    blocks = read_data()
-    return blocks
-
-
-def read_data():
-    pass
+    text = gtm('blocks')
+    if 'указанному налогоплательщику ОТСУТСТВУЮТ' in text:
+        return 'Сведений о блокировке счетов не имеется'
+    else:
+        return 'Имеются сведения о заблокированных счетах'

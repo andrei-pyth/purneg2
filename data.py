@@ -4,7 +4,6 @@ import take_srn
 import take_okfs
 import take_bfo
 import take_schs
-import taxes #
 import take_blocks 
 import reliability #
 #import get_gos_kont
@@ -40,7 +39,6 @@ class Company(pdfr.EgrulData, take_okfs.Okfs, take_bfo.Fo):
         self.ved = '---'
         self.facts = '---'
         self.important_facts = '---'
-        self.taxes = taxes.Taxes()
         self.reliability = reliability.Reliability()
         self.applications = '---'
 

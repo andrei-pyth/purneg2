@@ -157,11 +157,13 @@ class DocText():
         self.document.add_paragraph('\n\t' + self.comp.current_text + '\n')
 
         self.document.add_paragraph('Сведения об уплаченных организацией налогах и сборах:').style = self.document.styles['Heading 1']
-        self.document.add_paragraph(f'\n\t{self.comp.taxes}\n')
-        '''
+        self.document.add_paragraph(
+                f'\n\tВ текущем году:\t{self.comp.taxes_this_year}\t\t\tВ прошлом году:\t{self.comp.taxes_last_year}\n'
+                )
+        
         self.document.add_paragraph('Сведения о заблокированных счетах:').style = self.document.styles['Heading 1']
         self.document.add_paragraph(f'\n\t{self.comp.accounts_blocked}\n')
-        '''
+        
         self.document.add_paragraph('Данные о внешнеэкономической деятельности:').style = self.document.styles['Heading 1']
         self.document.add_paragraph(f'\n\t{self.comp.ved}\n')
         
