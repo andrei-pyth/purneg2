@@ -44,7 +44,7 @@ class Fo:
             self.common_sum_last_year = self.common_sum.group(2)
         else:
             self.common_sum_this_year = self.common_sum_last_year = 'сведений не имеется'
-        self.taxes = re.search(r'\n2410\n(.*)\(.*)', self._text)
+        self.taxes = re.search(r'\n2410\n(.*)\n(.*)', self._text)
         if self.taxes:
             self.taxes_this_year = self.taxes.group(1)
             self.taxes_last_year = self.taxes.group(2)

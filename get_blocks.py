@@ -1,5 +1,6 @@
 import auth
 from time import sleep
+from selenium.common.exceptions import TimeoutException 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,8 +14,13 @@ def main(inn):
             EC.element_to_be_clickable((By.XPATH, '//*[@id="btnSearch"]'))
             )
     window.click()
-    window = WebDriverWait(browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/div/div/div[2]/div[1]/button'))
-            )
+    try:
+        window = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/div/div/div[2]/div[1]/button'))
+                )
+    except TimeoutException:
+        window = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/div/div/ul/div[7]/div[1]/button'))
+                )
     window.click()
     sleep(5)
